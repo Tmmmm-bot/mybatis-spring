@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>JFinal Shop 商城</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f6f6f6;color:#333}
+        a{text-decoration:none;color:#333}
+
+        /* 顶部导航 */
+        .topbar{background:#f2f2f2;padding:6px 20px;font-size:14px;display:flex;justify-content:space-between}
+        .topbar a{margin:0 6px;color:#0077cc}
+
+        /* 头部 */
+        .header{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 20px;background:#fff}
+        .logo{font-size:26px;font-weight:700}
+        .logo span{color:#0077cc}
+        .search-box{flex:1;text-align:center}
+        .search-box input{width:60%;max-width:520px;padding:7px;border:1px solid #ccc;border-right:0;border-radius:4px 0 0 4px}
+        .search-box button{padding:7px 14px;border:0;background:#0077cc;color:#fff;border-radius:0 4px 4px 0;cursor:pointer}
+        .hotline{font-size:14px;color:#666}
+        .cart-btn{background:#ff6600;color:#fff;padding:7px 14px;border:0;border-radius:4px;cursor:pointer}
+
+        /* 顶部主导航 + 分类下拉 */
+        .nav{background:#0077cc;color:#fff}
+        .nav-inner{display:flex;gap:12px;padding:0 20px}
+        .cat{position:relative;padding:12px 16px;cursor:pointer}
+        .cat:hover{background:#005fa3}
+        .cat ul{display:none;position:absolute;left:0;top:100%;background:#fff;color:#333;min-width:240px;list-style:none;margin:0;padding:10px;border:1px solid #ccc;z-index:9}
+        .cat:hover ul{display:block}
+        .cat ul li{padding:6px 8px}
+        .menulinks{display:flex;align-items:center;gap:18px}
+        .menulinks a{padding:12px 6px;color:#fff}
+
+        /* 英雄区：左轮播 + 右新品上架（全屏） */
+        .hero{width:100%;display:flex;gap:0;align-items:stretch}
+        .slider-wrap{flex:1;min-width:0;background:#fff}
+        .slider{position:relative;width:100%;height:360px;overflow:hidden}
+        .slides{display:flex;transition:transform .5s ease}
+        .slides img{width:100%;height:360px;object-fit:cover;flex:0 0 100%}
+        .dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px}
+        .dots span{width:10px;height:10px;border-radius:50%;background:#fff;opacity:.5;cursor:pointer}
+        .dots .active{opacity:1;background:#0077cc}
+        .arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.35);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none}
+        .arrow.left{left:10px}
+        .arrow.right{right:10px}
+
+        .new-wrap{width:360px;background:#fff}
+        .new-head{padding:10px 12px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px;color:#777}
+        .new-grid{padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+        .new-grid img{width:100%;height:100px;object-fit:cover;border:1px solid #eee}
+
+        /* 热门商品（放大图片，减少留白） */
+        .section{width:100%;margin:10px auto;background:#fff}
+        .section h2{margin:0;padding:10px 14px;border-bottom:1px solid #eee;color:#666;font-size:16px}
+        .product-list{padding:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+        .product{border:1px solid #eee;text-align:center;padding:8px;background:#fafafa}
+        .product img{width:100%;height:180px;object-fit:cover;display:block}
+        .product p{margin:6px 0 0;font-size:14px;line-height:1.3}
+    </style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<div class="topbar">
+    <div>您好，欢迎光临JFinalShop！ <a href="#">登录</a> | <a href="#">注册</a></div>
+    <div><a href="#">关于我们</a></div>
+</div>
+
+<!-- 头部 -->
+<div class="header">
+    <div class="logo">JFinal <span>shop</span></div>
+    <div class="search-box">
+        <input type="text" placeholder="请输入关键词..." />
+        <button>搜索</button>
+    </div>
+    <div class="hotline">7x24小时服务热线：400-8888888</div>
+    <button class="cart-btn">购物车</button>
+</div>
+
+<!-- 主导航 + 分类 -->
+<div class="nav">
+    <div class="nav-inner">
+        <div class="cat">全部商品分类
+            <ul>
+                <li>家用电器</li>
+                <li>手机、运营商、数码</li>
+                <li>电脑、办公</li>
+                <li>家居、家具、家装、厨具</li>
+                <li>男装、女装、童装、内衣</li>
+                <li>美妆、个护清洁、宠物</li>
+                <li>鞋靴、箱包、钟表、珠宝</li>
+                <li>运动、户外</li>
+                <li>房产、汽车、汽车用品</li>
+                <li>母婴、玩具乐器</li>
+            </ul>
+        </div>
+        <div class="menulinks">
+            <a href="#">首页</a>
+        </div>
+    </div>
+</div>
+
+<!-- 英雄区：左轮播 + 右新品上架 -->
+<div class="hero">
+    <!-- 左：轮播 -->
+    <div class="slider-wrap">
+        <div class="slider" id="slider">
+            <div class="slides" id="slides">
+                <img src="images/1.png" alt="广告1">
+                <img src="images/2.png" alt="广告2">
+                <img src="images/3.png" alt="广告3">
+            </div>
+            <div class="arrow left" id="prev"></div>
+            <div class="arrow right" id="next"></div>
+            <div class="dots" id="dots">
+                <span class="active"></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右：新品上架 -->
+    <div class="new-wrap">
+        <div class="new-head">🛒 新品上架</div>
+        <div class="new-grid">
+            <img src="images/shoes.png" alt="鞋子">
+            <img src="images/wine.jpg" alt="酒">
+            <img src="images/umbrella.jpg" alt="伞">
+            <img src="images/cup.jpg" alt="杯子">
+            <img src="images/kiwi.jpg" alt="猕猴桃">
+            <img src="images/toy.jpg" alt="玩具">
+            <img src="images/drink.jpg" alt="饮料">
+            <img src="images/gift.jpg" alt="礼盒">
+            <img src="images/hat.jpg" alt="帽子">
+        </div>
+    </div>
+</div>
+
+<!-- 热门商品 -->
+<div class="section">
+    <h2>热门商品</h2>
+    <div class="product-list">
+        <div class="product"><img src="images/usb.jpg" alt="U盘"><p>精品U盘</p></div>
+        <div class="product"><img src="images/laptop.jpg" alt="笔记本"><p>轻薄本</p></div>
+        <div class="product"><img src="images/lamp.jpg" alt="台灯"><p>护眼台灯</p></div>
+        <div class="product"><img src="images/mug.jpg" alt="马克杯"><p>马克杯</p></div>
+        <div class="product"><img src="images/phone.jpg" alt="手机"><p>旗舰手机</p></div>
+    </div>
+</div>
+
+<script>
+    // 轮播逻辑
+    const slides = document.getElementById('slides');
+    const dots = Array.from(document.getElementById('dots').children);
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    let idx = 0, total = dots.length, timer = null;
+
+    function go(n){
+        idx = (n + total) % total;
+        slides.style.transform = `translateX(-${idx*100}%)`;
+        dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
+    }
+    function start(){ timer = setInterval(()=>go(idx+1), 3000); }
+    function stop(){ if(timer){ clearInterval(timer); timer = null; } }
+
+    dots.forEach((d,i)=> d.onclick = ()=>{ stop(); go(i); start(); });
+    prev.onclick = ()=>{ stop(); go(idx-1); start(); };
+    next.onclick = ()=>{ stop(); go(idx+1); start(); };
+    start();
+    const API_BASE = ''; // 同域部署可留空，若前后端分离，可填如 'http://localhost:8081'
+
+    async function listAll() {
+        const res = await fetch(`${API_BASE}/select1`);
+        const data = await res.json();
+        console.log('全部数据', data);
+        // TODO: 把 data 渲染到热门商品区或表格
+    }
+
+    async function addOne() {
+        const params = new URLSearchParams({
+        id: document.querySelector('#id').value,
+        name: document.querySelector('#name').value,
+        introduction: document.querySelector('#intro').value,
+        sale: document.querySelector('#sale').value,
+        number: document.querySelector('#number').value,
+    });
+        const res = await fetch(`${API_BASE}/insert?` + params.toString(), { method: 'POST' });
+        alert(await res.text());
+        listAll();
+    }
+
+        async function deleteOne(id) {
+        const res = await fetch(`${API_BASE}/delete?id=${encodeURIComponent(id)}`, { method: 'POST' });
+        alert(await res.text());
+        listAll();
+    }
+
+    // 页面加载完，先拉一遍数据
+    document.addEventListener('DOMContentLoaded', listAll);
+</script>
+</body>
+</html>
