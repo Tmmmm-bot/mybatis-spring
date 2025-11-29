@@ -223,20 +223,15 @@ public class JOJOController {
         if (ids == null) {
             return "批量删除失败";
         }
-
         // 空列表校验
         if (ids.isEmpty()) {
             return "批量删除成功";
-        }
-
-        try {
+        }try {
             // 对ID进行基本的有效性检查（防止SQL注入）
-            for (String id : ids) {
-                if (id == null || id.trim().isEmpty()) {
+            for (String id : ids){ if(id == null || id.trim().isEmpty()) {
                     return "批量删除失败";
                 }
             }
-
             return jojoMapper.deleteBatchIds(ids) > 0 ? "批量删除成功" : "批量删除失败";
         } catch (Exception e) {
             // 异常处理
@@ -271,5 +266,4 @@ public class JOJOController {
             throw new RuntimeException("查询低库存商品时发生错误", e);
         }
     }
-
 }
